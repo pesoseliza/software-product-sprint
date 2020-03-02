@@ -28,7 +28,21 @@ function addRandomGreeting() {
 }
 
 function getData() {
-  fetch('/data').then(response => response.text()).then((quote) => {
-    document.getElementById('quote-container').innerText = quote;
+//   fetch('/data').then(response => response.text()).then((quote) => {
+//     document.getElementById('quote-container').innerText = quote;
+//   });
+  fetch('/data')  // sends a request to /my-data-url
+  .then(response => response.json()) // parses the response as JSON
+  .then((comments) => { // now we can reference the fields in myObject!
+    const commentListElement = document.getElementById('comment-list');
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createCommentElement(comment));
+    })
   });
+}
+
+function createCommentElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }

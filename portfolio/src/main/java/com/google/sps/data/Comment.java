@@ -15,12 +15,12 @@
 package com.google.sps.data;
 
 /** An item on a todo list. */
-public final class Task {
+public final class Comment {
 
   private final String title;
   private final long timestamp;
 
-  public Task( String title, long timestamp) {
+  public Comment( String title, long timestamp) {
     this.title = title;
     this.timestamp = timestamp;
   }
