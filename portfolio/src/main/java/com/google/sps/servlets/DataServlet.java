@@ -14,7 +14,17 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import com.google.sps.data.Task;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +36,44 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Elizabeth!</h1>");
+    Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+    List<Task> tasks = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      String title = (String) entity.getProperty("title");
+      long timestamp = (long) entity.getProperty("timestamp");
+
+      Task task = new Task( title, timestamp);
+      tasks.add(task);
+    }
+
+    Gson gson = new Gson();
+
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(tasks));
+  }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String title = request.getParameter("title");
+    long timestamp = System.currentTimeMillis();
+
+    Entity taskEntity = new Entity("Task");
+    taskEntity.setProperty("title", title);
+    taskEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
+
+    response.sendRedirect("/index.html");
+  }
+
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
