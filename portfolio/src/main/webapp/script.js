@@ -15,22 +15,20 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+function addRandomFacts() {
+  const facts =
+      ['I am from Grand Rapids, MI', 'I go to the University of Michigan', 
+      'My family is from the Dominican Republic', 'Hablo Español'];
 
   // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  const fact = facts[Math.floor(Math.random() * facts.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  const factsContainer = document.getElementById('facts-container');
+  factsContainer.innerText = fact;
 }
 
 function getData() {
-//   fetch('/data').then(response => response.text()).then((quote) => {
-//     document.getElementById('quote-container').innerText = quote;
-//   });
   fetch('/data')  // sends a request to /my-data-url
   .then(response => response.json()) // parses the response as JSON
   .then((comments) => { // now we can reference the fields in myObject!
