@@ -49,8 +49,9 @@ public class DataServlet extends HttpServlet {
         for (Entity entity : results.asIterable()) {
         String title = (String) entity.getProperty("title");
         long timestamp = (long) entity.getProperty("timestamp");
+        String email = (String) entity.getProperty("email");
 
-        Comment new_comment = new Comment( title, timestamp);
+        Comment new_comment = new Comment( title, timestamp, email);
         comments.add(new_comment);
         }
 
@@ -76,15 +77,17 @@ public class DataServlet extends HttpServlet {
     
     String title = request.getParameter("title");
     long timestamp = System.currentTimeMillis();
+    String email = userService.getCurrentUser().getEmail();
 
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("title", title);
     commentEntity.setProperty("timestamp", timestamp);
+    commentEntity.setProperty("email", email);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
 
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/data");
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
