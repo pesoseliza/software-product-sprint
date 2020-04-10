@@ -19,9 +19,11 @@ public final class Comment {
 
   private final String title;
   private final long timestamp;
+  private final String email;
 
-  public Comment( String title, long timestamp) {
+  public Comment( String title, long timestamp, String email) {
     this.title = title;
     this.timestamp = timestamp;
+    this.email = email;
   }
 }
